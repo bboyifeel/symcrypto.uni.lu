@@ -66,7 +66,6 @@ class EnigmaButons():
 		print "_____"
 
 
-
 	def bruteforce(self):
 		if (len(self.plaintext) != len(self.ciphertext)):
 			print "plaintext size != ciphertext size"
