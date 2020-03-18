@@ -70,38 +70,152 @@ class EnigmaBomb():
 
 		return c
 
-	def bruteforce(self):
+	def bruteforceU(self):
 		for l in range(26):
 			for m in range(26):
 				for n in range(26):
 					state = [l, m, n]
 					for letter in range(26):
-						# DQ
+						# UE
 						result = self.encrypt(letter, state, 1)
 						result = self.encrypt(result, state, 6)
 
 						if (result == letter):
-							# DQOL through 12
-							result = self.encrypt(letter, state, 1)
-							result = self.encrypt(result, state, 2)
-							result = self.encrypt(result, state, 4)
-							result = self.encrypt(result, state, 11)
-							result = self.encrypt(result, state, 6)
+							# UC
+							result = self.encrypt(letter, state, 7)
+							result = self.encrypt(result, state, 8)
 							
 							if (result == letter):
-								# DQOL through 11
-								result = self.encrypt(letter, state, 1)
+								# UEC
+								result = self.encrypt(letter, state, 6)
 								result = self.encrypt(result, state, 2)
-								result = self.encrypt(result, state, 8)
-								result = self.encrypt(result, state, 7)
-								result = self.encrypt(result, state, 4)
-								result = self.encrypt(result, state, 11)
-								result = self.encrypt(result, state, 6)								
-							
+								result = self.encrypt(result, state, 8)								
+								
 								if (result == letter):
-									print(self.toLetter(l) + self.toLetter(m) + self.toLetter(n) + " " + self.toLetter(letter))
+									# UETC
+									result = self.encrypt(letter, state, 1)
+									result = self.encrypt(result, state, 11)
+									result = self.encrypt(result, state, 4)
+									result = self.encrypt(result, state, 8)	
+
+									if (result == letter):
+										print(self.toLetter(l) + self.toLetter(m) + self.toLetter(n) + " " + self.toLetter(letter))
+
+	def bruteforceE(self):
+		for l in range(26):
+			for m in range(26):
+				for n in range(26):
+					state = [l, m, n]
+					for letter in range(26):
+						# EU
+						result = self.encrypt(letter, state, 1)
+						result = self.encrypt(result, state, 6)
+
+						if (result == letter):
+							# EUC
+							result = self.encrypt(letter, state, 1)
+							result = self.encrypt(result, state, 7)
+							result = self.encrypt(result, state, 2)
+							
+							if (result == letter):
+								# EUCT
+								result = self.encrypt(letter, state, 1)
+								result = self.encrypt(result, state, 8)
+								result = self.encrypt(result, state, 4)
+								result = self.encrypt(result, state, 11)								
+								
+								if (result == letter):
+									# ECT
+									result = self.encrypt(letter, state, 2)
+									result = self.encrypt(result, state, 4)
+									result = self.encrypt(result, state, 11)	
+
+									if (result == letter):
+										print(self.toLetter(l) + self.toLetter(m) + self.toLetter(n) + " " + self.toLetter(letter))
+	
+	def bruteforceC(self):
+		for l in range(26):
+			for m in range(26):
+				for n in range(26):
+					state = [l, m, n]
+					for letter in range(26):
+						# CU
+						result = self.encrypt(letter, state, 7)
+						result = self.encrypt(result, state, 8)
+
+						if (result == letter):
+							# CEU
+							result = self.encrypt(letter, state, 2)
+							result = self.encrypt(result, state, 1)
+							result = self.encrypt(result, state, 8)
+							
+							if (result == letter):
+								# CTE
+								result = self.encrypt(letter, state, 4)
+								result = self.encrypt(result, state, 11)
+								result = self.encrypt(result, state, 2)
+								
+								if (result == letter):
+									# CTEU
+									result = self.encrypt(letter, state, 4)
+									result = self.encrypt(result, state, 11)
+									result = self.encrypt(result, state, 6)
+									result = self.encrypt(result, state, 7)	
+
+									if (result == letter):
+										print(self.toLetter(l) + self.toLetter(m) + self.toLetter(n) + " " + self.toLetter(letter))
+
+	def bruteforceT(self):
+		for l in range(26):
+			for m in range(26):
+				for n in range(26):
+					state = [l, m, n]
+					for letter in range(26):
+						# TEC
+						result = self.encrypt(letter, state, 11)
+						result = self.encrypt(result, state, 2)
+						result = self.encrypt(result, state, 4)
+
+						if (result == letter):
+							# TEUC
+							result = self.encrypt(letter, state, 11)
+							result = self.encrypt(result, state, 1)
+							result = self.encrypt(result, state, 7)
+							result = self.encrypt(result, state, 4)
+
+							if (result == letter):
+								# TEUC
+								result = self.encrypt(letter, state, 11)
+								result = self.encrypt(result, state, 6)
+								result = self.encrypt(result, state, 7)
+								result = self.encrypt(result, state, 4)								
+								
+								if (result == letter):
+									# TEUC
+									result = self.encrypt(letter, state, 11)
+									result = self.encrypt(result, state, 1)
+									result = self.encrypt(result, state, 8)
+									result = self.encrypt(result, state, 4)	
+
+									if (result == letter):
+										print(self.toLetter(l) + self.toLetter(m) + self.toLetter(n) + " " + self.toLetter(letter))
+
+	def bruteforce(self):
+		print("Bruteforcing Letter U")
+		self.bruteforceU()
+		print("Bruteforcing Letter E")
+		self.bruteforceE()
+		print("Bruteforcing Letter C")
+		self.bruteforceC()
+		print("Bruteforcing Letter T")
+		self.bruteforceT()
+
 
 
 if __name__ == '__main__':
+	# turing-welchman's bombe for
+	# plaintext UEPTIUCCQSTIOV
+	# ciphertext ECFCWEUURFEKZL
+
 	e = EnigmaBomb()
 	e.bruteforce()
