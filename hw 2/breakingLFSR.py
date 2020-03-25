@@ -49,6 +49,7 @@ class LFSR(object):
 
 
 def binaryStringToArray(strState):
+	""" Converts string of type 1001101 into np array """
 	arr = np.zeros(len(strState), int)
 	for i in range(len(strState)):
 		if strState[i] == "1":
@@ -59,6 +60,8 @@ def binaryStringToArray(strState):
 
 
 def powMatrix(matrix, exponent, mod):
+	""" Square ad multipy algorithm for matrices
+		(takes modulo every element) """
 	prod = np.identity(np.size(matrix[0]), int)
 	
 	if exponent == 0:
@@ -148,6 +151,9 @@ def task_1_1_2():
 
 
 def compareTwoArrays(first, second):
+	""" Compares two arrays and 
+		returs similarity persentage as int value"""
+
 	assert len(first) == len(second)
 
 	result = 0
@@ -161,9 +167,13 @@ def compareTwoArrays(first, second):
 	return result
 
 
+""" lamda to convert int into binary string of a size n """
 get_bin = lambda x, n: format(x, 'b').zfill(n)
 
+
 def x2(x0, x1, s):
+	""" Reverse engineering for a given function """
+
 	x2 = -1
 
 	if(x0 == 0 and x1 == 0 and s == 0):
@@ -177,36 +187,45 @@ def x2(x0, x1, s):
 
 	return x2
 
-def brutforceGeffeLike():
-	
+
+def bruteforceGeffeLike():
+	""" Correlation attack on Geffe-like stream cipher """
+
+	# given output (ciphertext)
 	geffesOutput = "11100000011100010000010000011000111111010010010011100111011011101101001111110101101000111111000101001110110010100100111100010101101110100101001100100011000010011001011100110011110011111010101001000101"
 	geffesOutput = binaryStringToArray(geffesOutput)
 
+	# bruteforcing L_0
 	print("Bruteforcing LFSR 0")
 	taps = [0, 1, 4, 7]
 	lfsr0 = LFSR(16, taps)
-
 	lfsr0Stream = 0
+
 	for i in range(1, int(math.pow(2,16))):
+		
 		initialState = get_bin(i, 16)
-		# print(initialState)
 		initialState = binaryStringToArray(initialState)
+		keyStream    = np.zeros(0, int)
 		lfsr0.init(initialState)
 
-		keyStream = np.zeros(0, int)
 		for j in range(len(geffesOutput)):
 			keyBit = lfsr0.clock()
 			keyStream = np.append(keyStream, keyBit)
-		# print(keyStream)
+		
 		percentage = compareTwoArrays(keyStream, geffesOutput)
+		
 		if (percentage < 35):
-			print("Key " + str(i) + " - " + str(percentage) + "%")
+			lfsr0Stream = keyStream
+
 			initialState = get_bin(i, 16)
 			initialState = binaryStringToArray(initialState)
 			lfsr0.init(initialState)
+
+			print("Key " + str(i) + " - " + str(percentage) + "%")
 			print("Initial state " + str(lfsr0))
-			lfsr0Stream = keyStream
+			
 	
+	# bruteforcing L_1
 	print("Bruteforcing LFSR 1")
 
 	taps = [0, 1, 7, 11]
@@ -214,29 +233,34 @@ def brutforceGeffeLike():
 	lfsr1Stream = 0
 	
 	for i in range(1, int(math.pow(2,16))):
+		
 		initialState = get_bin(i, 16)
-		# print(initialState)
 		initialState = binaryStringToArray(initialState)
+		keyStream    = np.zeros(0, int)
 		lfsr1.init(initialState)
 
-		keyStream = np.zeros(0, int)
 		for j in range(len(geffesOutput)):
 			keyBit = lfsr1.clock()
 			keyStream = np.append(keyStream, keyBit)
-		# print(keyStream)
+		
 		percentage = compareTwoArrays(keyStream, geffesOutput)
+		
 		if (percentage > 70):
-			print(str(i) + " - " + str(percentage) + "%")
+			lfsr1Stream = keyStream
+
 			initialState = get_bin(i, 16)
 			initialState = binaryStringToArray(initialState)
 			lfsr1.init(initialState)
+			
+			print(str(i) + " - " + str(percentage) + "%")
 			print(lfsr1)
-			lfsr1Stream = keyStream
 
+	# Reverse engineering L_2
 	lfsr2Stream = np.zeros(0, int)
 	for i in range(len(geffesOutput)):
 		lfsr2Stream = np.append(lfsr2Stream, x2(lfsr0Stream[i], lfsr1Stream[i], geffesOutput[i]))
 
 	print(lfsr2Stream)
 
-brutforceGeffeLike()
+# main
+bruteforceGeffeLike()
