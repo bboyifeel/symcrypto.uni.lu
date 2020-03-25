@@ -1,5 +1,6 @@
 import sys
 import numpy as np
+import math
 
 class LFSR(object):
 	def __init__(self, n, taps):
@@ -47,7 +48,7 @@ class LFSR(object):
 		return output
 
 
-def stateStringToArray(strState):
+def binaryStringToArray(strState):
 	arr = np.zeros(len(strState), int)
 	for i in range(len(strState)):
 		if strState[i] == "1":
@@ -79,7 +80,7 @@ def powMatrix(matrix, exponent, mod):
 
 def task_1_1_1():
 	initialState = "11110101011001111011100000011010010001111001111011111000000001101111110000011001101000101010100010011101001110111011111001011001"
-	initialState = stateStringToArray(initialState)
+	initialState = binaryStringToArray(initialState)
 	taps = [0, 1, 41, 45]
 	lfsr = LFSR(128, taps)
 	lfsr.init(initialState)
@@ -95,7 +96,7 @@ def task_1_1_1():
 
 def task_1_1_1_matrices():
 	initialState = "10011010011111011101110010111001000101010100010110011000001111110110000000011111011110011110001001011000000111011110011010101111"
-	initialState = stateStringToArray(initialState)
+	initialState = binaryStringToArray(initialState)
 	exponent = 256
 
 	taps = np.zeros(len(initialState), int)
@@ -146,4 +147,96 @@ def task_1_1_2():
 	print(finalState)
 
 
-task_1_1_1()
+def compareTwoArrays(first, second):
+	assert len(first) == len(second)
+
+	result = 0
+
+	for i in range(len(first)):
+		if first[i]==second[i]:
+			result += 1
+
+	result = 100 * result / len(first)
+
+	return result
+
+
+get_bin = lambda x, n: format(x, 'b').zfill(n)
+
+def x2(x0, x1, s):
+	x2 = -1
+
+	if(x0 == 0 and x1 == 0 and s == 0):
+		x2 = 0
+	elif (x0 == 0 and x1 == 0 and s == 0):
+		x2 = 1
+	elif (x0 == 1 and x1 == 1 and s == 1):
+		x2 = 0
+	elif (x0 == 1 and x1 == 1 and s == 0):
+		x2 = 1
+
+	return x2
+
+def brutforceGeffeLike():
+	
+	geffesOutput = "11100000011100010000010000011000111111010010010011100111011011101101001111110101101000111111000101001110110010100100111100010101101110100101001100100011000010011001011100110011110011111010101001000101"
+	geffesOutput = binaryStringToArray(geffesOutput)
+
+	print("Bruteforcing LFSR 0")
+	taps = [0, 1, 4, 7]
+	lfsr0 = LFSR(16, taps)
+
+	lfsr0Stream = 0
+	for i in range(1, int(math.pow(2,16))):
+		initialState = get_bin(i, 16)
+		# print(initialState)
+		initialState = binaryStringToArray(initialState)
+		lfsr0.init(initialState)
+
+		keyStream = np.zeros(0, int)
+		for j in range(len(geffesOutput)):
+			keyBit = lfsr0.clock()
+			keyStream = np.append(keyStream, keyBit)
+		# print(keyStream)
+		percentage = compareTwoArrays(keyStream, geffesOutput)
+		if (percentage < 35):
+			print("Key " + str(i) + " - " + str(percentage) + "%")
+			initialState = get_bin(i, 16)
+			initialState = binaryStringToArray(initialState)
+			lfsr0.init(initialState)
+			print("Initial state " + str(lfsr0))
+			lfsr0Stream = keyStream
+	
+	print("Bruteforcing LFSR 1")
+
+	taps = [0, 1, 7, 11]
+	lfsr1 = LFSR(16, taps)
+	lfsr1Stream = 0
+	
+	for i in range(1, int(math.pow(2,16))):
+		initialState = get_bin(i, 16)
+		# print(initialState)
+		initialState = binaryStringToArray(initialState)
+		lfsr1.init(initialState)
+
+		keyStream = np.zeros(0, int)
+		for j in range(len(geffesOutput)):
+			keyBit = lfsr1.clock()
+			keyStream = np.append(keyStream, keyBit)
+		# print(keyStream)
+		percentage = compareTwoArrays(keyStream, geffesOutput)
+		if (percentage > 70):
+			print(str(i) + " - " + str(percentage) + "%")
+			initialState = get_bin(i, 16)
+			initialState = binaryStringToArray(initialState)
+			lfsr1.init(initialState)
+			print(lfsr1)
+			lfsr1Stream = keyStream
+
+	lfsr2Stream = np.zeros(0, int)
+	for i in range(len(geffesOutput)):
+		lfsr2Stream = np.append(lfsr2Stream, x2(lfsr0Stream[i], lfsr1Stream[i], geffesOutput[i]))
+
+	print(lfsr2Stream)
+
+brutforceGeffeLike()
