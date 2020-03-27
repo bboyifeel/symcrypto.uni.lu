@@ -261,6 +261,3 @@ def bruteforceGeffeLike():
 		lfsr2Stream = np.append(lfsr2Stream, x2(lfsr0Stream[i], lfsr1Stream[i], geffesOutput[i]))
 
 	print(lfsr2Stream)
-
-# main
-bruteforceGeffeLike()
