@@ -107,16 +107,15 @@ def breaking_mrc5():
 
 	block = "1110000001110001000001000001100011111101001001001110011101101110"
 	block = binaryStringToArray(block)
-
 	ciphertext = mrc5_encrypt(block, key, 12)
-
 	B_k = mrc5_encrypt(np.zeros(64, int), key, 12)
-	A_k = mrc5_encrypt(block, np.zeros(64, int), 12)
-
+	A_k = mrc5_encrypt(block, np.zeros(64, int), 12)	
 	cracked = np.bitwise_xor(A_k, B_k)
-
-	print("ciphertext " + str(ciphertext))
-	print("cracked " + str(cracked))
+	print("Plaintext " + str(block))
+	print("Ciphertext with a key " + str(ciphertext))
+	print("Encrypted zero message " + str(B_k))
+	print("Encrypted msg with zero key " + str(A_k))
+	print("Ciphertext by cracking " + str(cracked))
 
 
 breaking_mrc5()
