@@ -99,9 +99,7 @@ def breaking_mrc5_demonstration():
 
 
 def breaking_mrc5():
-
-	"""https://crypto.stackexchange.com/questions/29804/given-a-linear-block-cipher-how-can-an-attacker-decrypt-any-plaintext-value-encr"""
-	
+	""" Demonstration of how we can encrypt any plaintext without knowing the key """
 	key   = "1101001111110101101000111111000101001110110010100100111100010101"
 	key	  = binaryStringToArray(key)
 
