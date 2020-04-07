@@ -69,33 +69,33 @@ def testEncryption():
 	print("Decoded " + str(result))
 
 
-def breaking_mrc5_demonstration():
+# def breaking_mrc5_demonstration():
 
-	"""https://crypto.stackexchange.com/questions/29804/given-a-linear-block-cipher-how-can-an-attacker-decrypt-any-plaintext-value-encr"""
+# 	"""https://crypto.stackexchange.com/questions/29804/given-a-linear-block-cipher-how-can-an-attacker-decrypt-any-plaintext-value-encr"""
 	
-	key   = "1101001111110101101000111111000101001110110010100100111100010101"
-	key	  = binaryStringToArray(key)
+# 	key   = "1101001111110101101000111111000101001110110010100100111100010101"
+# 	key	  = binaryStringToArray(key)
 	
-	M     = np.empty([64,0], int)
-	toEncrypt = np.zeros(64, int)
-	toEncrypt[63] = 1
+# 	M     = np.empty([64,0], int)
+# 	toEncrypt = np.zeros(64, int)
+# 	toEncrypt[63] = 1
 	
-	for i in range(64):
-		toEncrypt = cyclic_rotation_right(toEncrypt, 1)
-		column = mrc5_decrypt(toEncrypt, key, 12)
-		M = np.column_stack((M, column))
-	print M
+# 	for i in range(64):
+# 		toEncrypt = cyclic_rotation_right(toEncrypt, 1)
+# 		column = mrc5_decrypt(toEncrypt, key, 12)
+# 		M = np.column_stack((M, column))
+# 	print M
 
-	block = "1110000001110001000001000001100011111101001001001110011101101110"
-	block = binaryStringToArray(block)
+# 	block = "1110000001110001000001000001100011111101001001001110011101101110"
+# 	block = binaryStringToArray(block)
 
-	ciphertext = mrc5_encrypt(block, key, 12)
+# 	ciphertext = mrc5_encrypt(block, key, 12)
 
-	encrypted  = np.dot(M, block)
-	encrypted  = np.mod(encrypted, 2)
+# 	encrypted  = np.dot(M, block)
+# 	encrypted  = np.mod(encrypted, 2)
 
-	print("ciphertext " + str(ciphertext))
-	print("encrypted  " + str(encrypted))
+# 	print("ciphertext " + str(ciphertext))
+# 	print("encrypted  " + str(encrypted))
 
 
 def breaking_mrc5():
