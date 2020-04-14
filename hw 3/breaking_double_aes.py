@@ -15,8 +15,8 @@ print "[start] build forward dictionary"
 for x in range(keyRange):
 	key = "{0:06x}".format(x) + "00" * 13
 	aes = AES.new(key.decode("hex"), AES.MODE_ECB)
-	intermidiate = toHexString(aes.encrypt(plaintext))
-	dictionary[intermidiate] = key
+	intermediate = toHexString(aes.encrypt(plaintext))
+	dictionary[intermediate] = key
 
 print "[done] build forward dictionary"
 
@@ -26,10 +26,10 @@ for x in range(keyRange):
 	key = "{0:06x}".format(x) + "00" * 13
 	aes = AES.new(key.decode("hex"), AES.MODE_ECB)
 
-	intermidiate = toHexString(aes.decrypt(ciphertext))
+	intermediate = toHexString(aes.decrypt(ciphertext))
 
-	if intermidiate in dictionary:
-		print "key 1: {} \nkey 2: {}".format(dictionary[intermidiate], key)
+	if intermediate in dictionary:
+		print "key 1: {} \nkey 2: {}".format(dictionary[intermediate], key)
 		break
 
 print "[done] bruteforce"
